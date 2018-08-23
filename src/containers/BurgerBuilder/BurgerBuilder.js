@@ -93,6 +93,10 @@ class BurgerBulder extends Component {
     this.setState({ purchasing: false})
   }
 
+  purchaseContinueHandler = () => {
+    alert('you was click continue!')
+  }
+
   render () {
     /* make information for disabled button */
     const disabledInfo = {
@@ -105,7 +109,10 @@ class BurgerBulder extends Component {
     return (
       <Aux>
         <Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}> 
-          <OrderSummary ingredients={this.state.ingredients}></OrderSummary>
+          <OrderSummary 
+            ingredients={this.state.ingredients} 
+            modalClosed={this.purchaseCancelHandler}
+            continue={this.purchaseContinueHandler}></OrderSummary>
         </Modal>
         <Burger ingredients={this.state.ingredients}/>
         <BurgerControls 
