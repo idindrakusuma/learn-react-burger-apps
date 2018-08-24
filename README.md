@@ -1,6 +1,8 @@
 # Burger App - Real Project from Udemy React Course
 
+<center>
 <img src="./src/assets/images/burger-logo.png" style="max-width: 100px">
+</center>
 
 ## How to run
 
