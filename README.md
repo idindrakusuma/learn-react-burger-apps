@@ -18,6 +18,7 @@
 - `firebase login` => then login using your account
 - `firebase init` => init the project setup
 - `firebase deploy` => deploy! done!
+- And if setup was created, for deploy just using `npm run deploy`
 
 ## Planning React
 1. Component Tree / Component Structure
