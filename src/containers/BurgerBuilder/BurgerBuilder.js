@@ -20,16 +20,23 @@ const INGREDIENT_PRICE = {
 class BurgerBulder extends Component {
 
   state = {
-    ingredients: {
-      salad: 0,
-      bacon: 0,
-      cheese: 0,
-      meat: 0
-    },
+    ingredients: null,
     totalPrice: 0,
     purchasable: false,
     purchasing: false,
-    loading: false
+    loading: false,
+    error: false
+  }
+
+  /* lifecycle react */
+  componentDidMount () {
+    axios.get('/ingredients.json')
+      .then(res => {
+        this.setState({ ingredients: res.data });
+      })
+      .catch(err => {
+        this.setState({ error: err });
+      })
   }
 
   updatePurchaseState (ingredients) {
@@ -138,13 +145,32 @@ class BurgerBulder extends Component {
     }
 
     /* set loading */
-    let orderSummary = <OrderSummary 
+    let orderSummary = null;
+
+    let burgerIngredients = this.state.error ? <p style={{textAlign: 'center'}}> { this.state.error.message } </p> : <Spinner />
+    
+    if (this.state.ingredients) {
+      orderSummary = <OrderSummary 
                         ingredients={this.state.ingredients} 
                         price={this.state.totalPrice}
                         modalClosed={this.purchaseCancelHandler}
                         continue={this.purchaseContinueHandler}>
                       </OrderSummary>;
-    if(this.state.loading) {
+
+      burgerIngredients = (
+        <Aux>
+          <Burger ingredients={this.state.ingredients}/>
+          <BurgerControls 
+              ingredientsAdded={this.addIngredientHanlder} 
+              ingredientsRemoved={this.removeIngredientHandler}
+              disabled={disabledInfo}
+              price={this.state.totalPrice}
+              purchasable={this.state.purchasable}
+              order={this.purchaseHandler} />
+        </Aux>);
+    }
+
+    if (this.state.loading) {
       orderSummary = <Spinner />;
     }
 
@@ -153,14 +179,7 @@ class BurgerBulder extends Component {
         <Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}> 
           { orderSummary }
         </Modal>
-        <Burger ingredients={this.state.ingredients}/>
-        <BurgerControls 
-          ingredientsAdded={this.addIngredientHanlder} 
-          ingredientsRemoved={this.removeIngredientHandler}
-          disabled={disabledInfo}
-          price={this.state.totalPrice}
-          purchasable={this.state.purchasable}
-          order={this.purchaseHandler} />
+        { burgerIngredients }
       </Aux>
     );
   }
