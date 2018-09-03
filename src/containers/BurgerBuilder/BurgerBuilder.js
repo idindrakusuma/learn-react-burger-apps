@@ -6,6 +6,7 @@ import BurgerControls from '../../components/Burger/BuildControls/BuildControls'
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
+import withErrorHanlder from '../../hoc/withErrorHandler/withErrorHandler';
 /* api */
 import axios from '../../common/api.orders';
 
@@ -116,7 +117,7 @@ class BurgerBulder extends Component {
       deliveryMethod: 'fastest'
     };
     /* post to backend */
-    axios.post('order.json', order)
+    axios.post('/orders.json', order)
       .then(res => {
         console.log(res)
         this.setState({ loading: false, purchasing: false})
@@ -165,4 +166,4 @@ class BurgerBulder extends Component {
   }
 }
 
-export default BurgerBulder;
+export default withErrorHanlder(BurgerBulder, axios);
