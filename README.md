@@ -12,6 +12,13 @@
 - then, `npm start`
 - Open your browser and open in `localhost:3000`
 
+## How to Deploy in Firebase?
+
+- Make initial setup `npm install -g firebase-tools`
+- `firebase login` => then login using your account
+- `firebase init` => init the project setup
+- `firebase deploy` => deploy! done!
+
 ## Planning React
 1. Component Tree / Component Structure
 2. Aplication State (Data)
