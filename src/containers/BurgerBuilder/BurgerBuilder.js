@@ -35,6 +35,7 @@ class BurgerBulder extends Component {
         this.setState({ ingredients: res.data });
       })
       .catch(err => {
+        console.log('Gagal disini');
         this.setState({ error: err });
       })
   }
