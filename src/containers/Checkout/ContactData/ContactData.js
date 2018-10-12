@@ -9,12 +9,65 @@ import axios from '../../../common/api.orders';
 
 class ContactData extends Component {
   state = {
-    name: '',
-    email: '',
-    address: {
-      street: '',
-      postalCode: '',
-    },
+    orderForm: {
+        name: {
+          elementType: 'input',
+          elementConfig: {
+            type: 'text',
+            placeholder: 'Your Name',
+          },
+          value: '',
+        },
+        street: {
+          elementType: 'input',
+          elementConfig: {
+            type: 'text',
+            placeholder: 'Street',
+          },
+          value: '',
+        },
+        city: {
+          elementType: 'input',
+          elementConfig: {
+            type: 'text',
+            placeholder: 'City',
+          },
+          value: '',
+        },
+        zipCode: {
+          elementType: 'input',
+          elementConfig: {
+            type: 'number',
+            placeholder: 'ZIP Code',
+          },
+          value: '',
+        },
+        country: {
+          elementType: 'input',
+          elementConfig: {
+            type: 'text',
+            placeholder: 'Country',
+          },
+          value: '',
+        },
+        email: {
+          elementType: 'input',
+          elementConfig: {
+            type: 'email',
+            placeholder: 'Your e-Mail',
+          },
+          value: '',
+        },
+        deliveryMethod: {
+          elementType: 'select',
+          elementConfig: {
+            options: [
+              {value: 'fastest', displayValue: 'Fasttest'},
+              {value: 'cheapest', displayValue: 'Cheapest'},
+            ]
+          },
+        },
+      },
     loading: false,
   }
 
@@ -25,17 +78,6 @@ class ContactData extends Component {
     const order = {
       ingredients: this.props.ingredients,
       price: this.props.price,
-      customer: {
-        name: 'Indra Kusuma',
-        address: {
-          street: 'Jalan Pusponjolo',
-          city: 'Semarang',
-          zipCode: 12334,
-          country: 'Indonesia'
-        },
-        email: 'id.indrakusuma@gmail.com'
-      },
-      deliveryMethod: 'fastest'
     };
     /* post to backend */
     axios.post('/orders.json', order)
@@ -51,14 +93,26 @@ class ContactData extends Component {
   }
 
   render() {
+    const formElementsArray = [];
+    for (let key in this.state.orderForm) {
+      formElementsArray.push({
+        id: key,
+        config: this.state.orderForm[key]
+      })
+    }
+
+    console.log(formElementsArray);
     let form = null;
     if (!this.state.loading) {
       form = (
         <form>
-          <Input inputtype="input" type="text" name="name" placeholder="Enter your Name"/>
-          <Input inputtype="input" type="email" name="email" placeholder="Enter your Email"/>
-          <Input inputtype="input" type="text" name="street" placeholder="Enter your Street"/>
-          <Input inputtype="input" type="text" name="postalCode" placeholder="Enter your Postal Code"/>
+          {formElementsArray.map(formElement => (
+            <Input
+              key={formElement.id}
+              elementType={formElement.config.elementType}
+              elementConfig={formElement.config.elementConfig}
+              value={formElement.config.value}/>
+          ))}
           <Button btnType="Success" clicked={this.orderHanlder} >ORDER</Button>
         </form>
       );
