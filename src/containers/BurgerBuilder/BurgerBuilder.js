@@ -42,10 +42,7 @@ class BurgerBulder extends Component {
         return sum + el;
       }, 0)
 
-      this.setState({
-        purchasable: sum > 0
-      })
-
+      return sum > 0;
   }
 
   purchaseHandler = () => {
@@ -100,7 +97,7 @@ class BurgerBulder extends Component {
               ingredientsRemoved={this.props.onIngredientRemove}
               disabled={disabledInfo}
               price={this.props.totalPrice}
-              purchasable={this.state.purchasable}
+              purchasable={this.updatePurchaseState(this.props.ings)}
               order={this.purchaseHandler} />
         </Aux>);
     }
