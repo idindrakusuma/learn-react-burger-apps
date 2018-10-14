@@ -10,7 +10,7 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHanlder from '../../hoc/withErrorHandler/withErrorHandler';
 /* api & types */
 import axios from '../../common/api.orders';
-import * as actionTypes from '../../store/action.type';
+import * as actionTypes from '../../store/actions/actionTypes';
 
 class BurgerBulder extends Component {
 
