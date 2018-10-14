@@ -8,7 +8,6 @@ import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHanlder from '../../hoc/withErrorHandler/withErrorHandler';
-/* api & types */
 import axios from '../../common/api.orders';
 import * as burgerBuilderActions from '../../store/actions/index';
 
@@ -22,16 +21,9 @@ class BurgerBulder extends Component {
   }
 
   /* lifecycle react */
-  // componentDidMount () {
-  //   axios.get('/ingredients.json')
-  //     .then(res => {
-  //       this.setState({ ingredients: res.data });
-  //     })
-  //     .catch(err => {
-  //       console.log('Gagal disini');
-  //       this.setState({ error: err });
-  //     })
-  // }
+  componentDidMount () {
+    this.props.initIngredients();
+  }
 
   updatePurchaseState (ingredients) {
     const sum = Object.keys(ingredients)
@@ -69,7 +61,7 @@ class BurgerBulder extends Component {
     /* set loading */
     let orderSummary = null;
 
-    let burgerIngredients = this.state.error ? <p style={{textAlign: 'center'}}> { this.state.error.message } </p> : <Spinner />
+    let burgerIngredients = this.props.error ? <p style={{textAlign: 'center'}}> { this.props.error.message } </p> : <Spinner />
     
     if (this.props.ings) {
       orderSummary = <OrderSummary 
@@ -111,6 +103,7 @@ const mapStateToProps = (state) => {
   return {
     ings: state.ingredients,
     totalPrice: state.totalPrice,
+    error: state.error,
   }
 }
 
@@ -118,6 +111,7 @@ const mapDispacthToProps = (dispatch) => {
   return {
     onIngredientAdded: (ignName) => dispatch(burgerBuilderActions.addIngredient(ignName)),
     onIngredientRemove: (ignName) => dispatch(burgerBuilderActions.removeIngredient(ignName)),
+    initIngredients: () => dispatch(burgerBuilderActions.initIngredients()),
   }
 }
 
