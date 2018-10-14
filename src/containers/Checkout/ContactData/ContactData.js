@@ -5,8 +5,10 @@ import Button from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
 import classes from './ContactData.css';
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 
 import axios from '../../../common/api.orders';
+import * as actions from '../../../store/actions/index';
 
 class ContactData extends Component {
   state = {
@@ -99,6 +101,7 @@ class ContactData extends Component {
             {value: 'cheapest', displayValue: 'Cheapest'},
           ]
         },
+        value: 'fastest',
         valid: true,
         validation: {},
       },
@@ -122,16 +125,7 @@ class ContactData extends Component {
       orderData: formData,
     };
     /* post to backend */
-    axios.post('/orders.json', order)
-      .then(res => {
-        console.log(res)
-        this.setState({ loading: false})
-        this.props.history.replace('/');
-      })
-      .catch(err => {
-        console.log(err)
-        this.setState({ loading: false})
-      })
+    this.props.onOrderBurger(order);
   }
 
   checkValidity(value, rules) {
@@ -191,7 +185,7 @@ class ContactData extends Component {
     }
 
     let form = null;
-    if (!this.state.loading) {
+    if (!this.props.loading) {
       form = (
         <form onSubmit={this.orderHandler}>
           {formElementsArray.map(formElement => (
@@ -224,9 +218,16 @@ class ContactData extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    ings: state.ingredients,
-    totalPrice: state.totalPrice,
+    ings: state.burgerBuilder.ingredients,
+    totalPrice: state.burgerBuilder.totalPrice,
+    loading: state.order.loading,
   }
 }
 
-export default connect(mapStateToProps)(ContactData);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onOrderBurger: (orderData) => dispatch(actions.purchaseBurger(orderData)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData, axios));
