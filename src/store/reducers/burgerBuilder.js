@@ -14,37 +14,44 @@ const INGREDIENT_PRICE = {
   meat: 1.0
 }
 
+const initIngredients = (state, action) => {
+  return {
+    ...state,
+    ingredients: action.ingredients,
+    totalPrice: 0,
+    error: false,
+  }
+}
+
+const addIngredient = (state, action) => {
+  return {
+    ...state,
+    ingredients: {
+      ...state.ingredients,
+      [action.ingredientName]: state.ingredients[action.ingredientName] + 1,
+    },
+    totalPrice: state.totalPrice + INGREDIENT_PRICE[action.ingredientName],
+  }
+}
+
+const removeIngredient = (state, action) => {
+  return {
+    ...state,
+    ingredients: {
+      ...state.ingredients,
+      [action.ingredientName]: state.ingredients[action.ingredientName] - 1,
+    },
+    totalPrice: state.totalPrice - INGREDIENT_PRICE[action.ingredientName],
+  }
+}
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.INIT_INGREDIENTS:
-      return {
-        ...state,
-        ingredients: action.ingredients,
-        totalPrice: 0,
-        error: false,
-      }
-    case actionTypes.FETCH_INGREDIENTS_FAILED:
-      return updateObject(state, { error: true });
-    case actionTypes.ADD_INGREDIENT:
-      return {
-        ...state,
-        ingredients: {
-          ...state.ingredients,
-          [action.ingredientName]: state.ingredients[action.ingredientName] + 1,
-        },
-        totalPrice: state.totalPrice + INGREDIENT_PRICE[action.ingredientName],
-      }
-    case actionTypes.REMOVE_INGREDIENT:
-      return {
-        ...state,
-        ingredients: {
-          ...state.ingredients,
-          [action.ingredientName]: state.ingredients[action.ingredientName] - 1,
-        },
-        totalPrice: state.totalPrice - INGREDIENT_PRICE[action.ingredientName],
-      }
-    default:
-      return state;
+    case actionTypes.INIT_INGREDIENTS: return initIngredients(state, action);
+    case actionTypes.FETCH_INGREDIENTS_FAILED: return updateObject(state, { error: true });
+    case actionTypes.ADD_INGREDIENT: return addIngredient(state, action);
+    case actionTypes.REMOVE_INGREDIENT: return removeIngredient(state, action);
+    default: return state;
   }
 };
 
