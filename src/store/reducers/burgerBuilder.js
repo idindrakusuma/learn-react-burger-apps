@@ -1,4 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
+import { updateObject } from '../utility';
 
 const initialState = {
   ingredients: null,
@@ -23,10 +24,7 @@ const reducer = (state = initialState, action) => {
         error: false,
       }
     case actionTypes.FETCH_INGREDIENTS_FAILED:
-      return {
-        ...state,
-        error: true,
-      }
+      return updateObject(state, { error: true });
     case actionTypes.ADD_INGREDIENT:
       return {
         ...state,
