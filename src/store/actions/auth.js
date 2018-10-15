@@ -12,7 +12,8 @@ export const authStart = () => {
 export const authSuccess = (authData) => {
   return {
     type: actionTypes.AUTH_SUCCESS,
-    authData: authData,
+    idToken: authData.idToken,
+    userId: authData.localId,
   }
 }
 
@@ -25,6 +26,7 @@ export const authFailed = (error) => {
 
 export const auth = (email, password, isSigup) => {
   return dispatch => {
+    dispatch(authStart());
     const authData = {
       email: email,
       password: password,
@@ -42,7 +44,7 @@ export const auth = (email, password, isSigup) => {
       })
       .catch(err => {
         console.log(err);
-        dispatch(authFailed(err));
+        dispatch(authFailed(err.response.data.error));
       })
   }
 }
