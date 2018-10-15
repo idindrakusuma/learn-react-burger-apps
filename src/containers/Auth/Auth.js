@@ -6,6 +6,7 @@ import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
 
 import * as actions from '../../store/actions/index';
+import { timingSafeEqual } from 'crypto';
 
 class Auth extends Component {
   state = {
@@ -41,6 +42,7 @@ class Auth extends Component {
         touched: false,
       }
     },
+    isSignup: true,
   }
 
   checkValidity(value, rules) {
@@ -75,6 +77,12 @@ class Auth extends Component {
     return isValid;
   }
 
+  swicthButtonHandler = () => {
+    this.setState( prevState => {
+      return { isSignup: !prevState.isSignup }
+    })
+  }
+
   inputChangedHandler = (event, controlName) => {
     const updatedControls = {
       ...this.state.controls,
@@ -91,8 +99,7 @@ class Auth extends Component {
 
   submitHandler = (event) => {
     event.preventDefault();
-    console.log('submitted')
-    this.props.onAuth(this.state.controls.email.value, this.state.controls.password.value)
+    this.props.onAuth(this.state.controls.email.value, this.state.controls.password.value, this.state.isSignup);
   }
 
   render () {
@@ -121,8 +128,9 @@ class Auth extends Component {
       <div className={classes.Auth}>
         <form onSubmit={this.submitHandler}>
           { form }
-          <Button btnType="Success"> Sign Up </Button>
+          <Button btnType="Success"> {this.state.isSignup ? 'Signup' : 'Login'} </Button>
         </form>
+          <Button btnType="Danger" clicked={this.swicthButtonHandler}> Switch to {this.state.isSignup ? 'Login' : 'Sign Up'} </Button>
       </div>
     );
   };
@@ -130,7 +138,7 @@ class Auth extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onAuth: (email, password) => dispatch(actions.auth(email, password))
+    onAuth: (email, password, isSignup) => dispatch(actions.auth(email, password, isSignup))
   }
 }
 

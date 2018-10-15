@@ -1,7 +1,5 @@
 import axios from 'axios';
-
 import * as actionTypes from '../actions/actionTypes';
-require('dotenv').config();
 
 const API_KEY = 'AIzaSyCKl3ULtVkcPpZMwuRBdrfYM_6edVbf4dw';
 
@@ -25,19 +23,25 @@ export const authFailed = (error) => {
   }
 }
 
-export const auth = (email, password) => {
+export const auth = (email, password, isSigup) => {
   return dispatch => {
     const authData = {
       email: email,
       password: password,
       returnSecureToken: true,
     }
-    console.log(authData);
-    axios.post(`https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${API_KEY}`, authData)
+    /* what the method? */
+    let url = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?';
+    if (!isSigup) {
+      url = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?'
+    }
+    axios.post(`${url}key=${API_KEY}`, authData)
       .then(res => {
+        console.log(res.data);
         dispatch(authSuccess(res.data));
       })
       .catch(err => {
+        console.log(err);
         dispatch(authFailed(err));
       })
   }
